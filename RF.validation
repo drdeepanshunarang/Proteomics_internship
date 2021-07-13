@@ -1,0 +1,44 @@
+!pip install missingpy
+import pandas as pd
+import numpy as np
+from google.colab import drive
+drive.mount('/content/drive')
+path = "/content/drive/My Drive/data/Book6.csv"
+book = pd.read_csv(path)
+x = book.drop('Protein IDs', axis = 1)
+y = x.drop(['Group4_1','Group4_2', 'Group4_3'], axis = 1)
+d = x.drop(['Group4_1','Group4_2', 'Group4_3'], axis = 1)
+z = x.drop(['Group3_1', 'Group3_2', 'Group3_3'], axis = 1)
+e = x.drop(['Group3_1', 'Group3_2', 'Group3_3'], axis = 1)
+inds1 = list(set(np.random.randint(0,len(y), 300 )))
+inds2 = list(set(np.random.randint(0,len(y), 400 )))
+inds3 = list(set(np.random.randint(0,len(y), 350 )))
+inds4 = list(set(np.random.randint(0,len(z), 670 )))
+inds5 = list(set(np.random.randint(0,len(z), 170 )))
+inds6 = list(set(np.random.randint(0,len(z), 200 )))
+y['Group3_1'] = [val if i not in inds1 else np.nan for i, val in enumerate(y['Group3_1'])]
+y['Group3_2'] = [val if i not in inds2 else np.nan for i, val in enumerate(y['Group3_2'])]
+y['Group3_3'] = [val if i not in inds3 else np.nan for i, val in enumerate(y['Group3_3'])]
+z['Group4_1'] = [val if i not in inds4 else np.nan for i, val in enumerate(z['Group4_1'])]
+z['Group4_2'] = [val if i not in inds5 else np.nan for i, val in enumerate(z['Group4_2'])]
+z['Group4_3'] = [val if i not in inds6 else np.nan for i, val in enumerate(z['Group4_3'])]
+from missingpy import MissForest
+imputer = MissForest()
+y_imputed = imputer.fit_transform(y)
+z_imputed = imputer.fit_transform(y)
+d['MF_Group3_1'] = y_imputed[]
+d['MF_Group3_2'] = y_imputed[]
+d['MF_Group3_3'] = y_imputed[]
+comparison_df = d[['MF_Group3_1', 'Group3_1', 'MF_Group3_2', 'Group3_2', 'MF_Group3_3', 'Group3_3']
+comparison_df['ABS_ERROR_1'] = np.abs(comparison_df['Group3_1'] - comparison_df['MF_Group3_1'])
+comparison_df['ABS_ERROR_2'] = np.abs(comparison_df['Group3_2'] - comparison_df['MF_Group3_2'])
+comparison_df['ABS_ERROR_3'] = np.abs(comparison_df['Group3_3'] - comparison_df['MF_Group3_3'])
+comparison_df.iloc[sorted([*inds1, *inds2, *inds3])]
+d['MF_Group4_1'] = z_imputed[]
+d['MF_Group4_2'] = z_imputed[]
+d['MF_Group4_3'] = z_imputed[]
+comparison_df = d[['MF_Group3_1', 'Group4_1', 'MF_Group4_2', 'Group4_2', 'MF_Group4_3', 'Group4_3']
+comparison_df['ABS_ERROR_1'] = np.abs(comparison_df['Group4_1'] - comparison_df['MF_Group4_1'])
+comparison_df['ABS_ERROR_2'] = np.abs(comparison_df['Group4_2'] - comparison_df['MF_Group4_2'])
+comparison_df['ABS_ERROR_3'] = np.abs(comparison_df['Group4_3'] - comparison_df['MF_Group4_3'])
+comparison_df.iloc[sorted([*inds4, *inds5, *inds6])]
