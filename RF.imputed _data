@@ -7,9 +7,7 @@ path = "/content/drive/My Drive/data/Book7.csv"
 book = pd.read_csv(path)
 x = book.drop('Protein IDs', axis = 1)
 y = x.drop(['Group4_1','Group4_2', 'Group4_3'], axis = 1)
-d = x.drop(['Group4_1','Group4_2', 'Group4_3'], axis = 1)
 z = x.drop(['Group3_1', 'Group3_2', 'Group3_3'], axis = 1)
-e = x.drop(['Group3_1', 'Group3_2', 'Group3_3'], axis = 1)
 from missingpy import MissForest
 imputer = MissForest()
 y_imputed = imputer.fit_transform(y)
