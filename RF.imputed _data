@@ -18,4 +18,4 @@ y_imputed1 = pd.DataFrame(y_imputed)
 z_imputed = imputer.fit_transform(z)
 z_imputed1 = pd.DataFrame(z_imputed)
 y_imputed1.to_csv('final3.csv')
-z_imputed1.to_csv('final4.csv') #combine the two groups from the two files manually
+z_imputed1.to_csv('final4.csv') #combine the columns of the two manually
