@@ -1,19 +1,21 @@
 !pip install missingpy
 import pandas as pd
 import numpy as np
+import sys
+import sklearn.neighbors._base
 from google.colab import drive
 drive.mount('/content/drive')
-path = "/content/drive/My Drive/data/Book7.csv"
+path = "/content/drive/My Drive/data/Raw_Data.csv"
 book = pd.read_csv(path)
 x = book.drop('Protein IDs', axis = 1)
 y = x.drop(['Group4_1','Group4_2', 'Group4_3'], axis = 1)
 z = x.drop(['Group3_1', 'Group3_2', 'Group3_3'], axis = 1)
+sys.modules['sklearn.neighbors.base'] = sklearn.neighbors._base
 from missingpy import MissForest
 imputer = MissForest()
 y_imputed = imputer.fit_transform(y)
 y_imputed1 = pd.DataFrame(y_imputed)
 z_imputed = imputer.fit_transform(z)
-y_imputed1.to_excel('final3.xls')
-z_imputed1.to_excel('final4.xls')
-from google.colab import files
-files.download('final3.xls')
+z_imputed1 = pd.DataFrame(z_imputed)
+y_imputed1.to_csv('final3.csv')
+z_imputed1.to_csv('final4.csv') #combine the two groups from the two files manually
